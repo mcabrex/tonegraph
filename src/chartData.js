@@ -55,7 +55,6 @@ export const dataSetGenerator = (noteDataList,part) => {
     noteDataList.forEach((noteObj,ind,list) => {
         // console.log('noteObj',noteObj)
 
-        if(ind < 600) return
         const {qpm,divisions,duration,pitch,voice,chord} = noteObj
         const voiceNum = Number(voice) - 1
         const optionsObj = {
