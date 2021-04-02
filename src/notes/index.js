@@ -13,48 +13,51 @@ const noteFrequency = ({baseNote={octave:'4',step:'A',alter:'0'},baseFrequency=4
   }
   
   const totalHalfSteps = (baseNoteObj,fixedNoteObj) => {
+    //what this function is doing is calculating the halfsteps in logical stages
+    //stage1 calculates the octave half steps 
+    //stage2 calculates the accidental half steps
+    //stage3 calculates the note half steps
+    //stage4 accounts for the octave differential, more on that below
+
     const baseScale = ['C','D','E','F','G','A','B']
     //the octave number should be the last position on the note string
-    
-    const bnOct = Number(baseNoteObj['octave'])
-    const fnOct = Number(fixedNoteObj['octave'])
-    const octaveDiff = Math.abs(Number(fnOct) - Number(bnOct))
-    //the number of halfsteps between octaves is 12
-    let octaveHS = octaveDiff*12
-  
-    const fnLttr = fixedNoteObj['step']
-    const bnLttr = baseNoteObj['step']
-  
-  
-    let baseAccidentals = baseNoteObj['alter'] !== undefined ? Number(baseNoteObj['alter']) : 0
-    let fixedAccidentals = fixedNoteObj['alter'] !== undefined ? Number(fixedNoteObj['alter']) : 0
+
+    const baseOct = Number(baseNoteObj['octave'])
+    const baseLetter = baseNoteObj['step']
+    const baseAccidentals = baseNoteObj['alter'] !== undefined ? Number(baseNoteObj['alter']) : 0
+
+    const fixedOct = Number(fixedNoteObj['octave'])
+    const fixedLetter = fixedNoteObj['step']
+    const fixedAccidentals = fixedNoteObj['alter'] !== undefined ? Number(fixedNoteObj['alter']) : 0
     //The alter element represents chromatic alteration in number of semitones (e.g., -1 for flat, 1 for sharp). 
+
+    //stage1
+    const octaveDiff = Math.abs(Number(fixedOct) - Number(baseOct))
+    let octaveHalfSteps = octaveDiff*12
   
-    //really think this one out loud
-    let accidentalHSTotal = fnOct < bnOct ? 0+baseAccidentals-fixedAccidentals : 0-baseAccidentals+fixedAccidentals
+    //stage2
     //here we use zero as a fixed point to anchor the 'position' of the fixedNote relative to the BasedNote 
-    //fixedNote higher than basedNote: count the halfsteps going up from the basedNote
-    //fixedNote lower than baseNote: count the halfsteps going down from the basedNote
+    let accidentalHalfSteps = baseOct > fixedOct ? 0+baseAccidentals-fixedAccidentals : 0-baseAccidentals+fixedAccidentals
+    let halfStepTotal = octaveHalfSteps + accidentalHalfSteps
   
-    let halfStepTotal = octaveHS + accidentalHSTotal
-  
-    //it helps to think of this if else statement as if you're looking at a line scale, with the baseNote resting at a metaphorical 0
-    if(baseScale.indexOf(bnLttr) > baseScale.indexOf(fnLttr)){
-      return fnOct < bnOct ? (halfStepTotal+relativeHalfSteps(fnLttr,bnLttr))*-1 : halfStepTotal-relativeHalfSteps(fnLttr,bnLttr)
+    //stage3
+    //B > C
+    const countDirection = baseScale.indexOf(baseLetter) > baseScale.indexOf(fixedLetter) ? true : false
+    const relativeHalfStepTotal = countDirection ? relativeHalfSteps(fixedLetter,baseLetter) : relativeHalfSteps(baseLetter,fixedLetter) 
+
+    //stage4
+    //it helps to think of this next part as a line scale with the basenote resting at the center of it
+    //4 scenarios?
+    //2 scenarios account for remainder half steps
+        //octaves start at C and end on B but the base note does not necessarily have to follow that so you'll have to account for that octave differential
+    //2 scenarios account for the octave being above or below
+    if(countDirection){
+      return fixedOct < baseOct ? (halfStepTotal+relativeHalfStepTotal)*-1 : halfStepTotal-relativeHalfStepTotal
     }
     else {
-      return fnOct < bnOct ? (halfStepTotal-relativeHalfSteps(bnLttr,fnLttr))*-1 : halfStepTotal+relativeHalfSteps(bnLttr,fnLttr) 
+      return fixedOct < baseOct ? (halfStepTotal-relativeHalfStepTotal)*-1 : halfStepTotal+relativeHalfStepTotal
     }
   }
-    //use the baseNote as the anchor for how you handle the conditionals
-    //what this function is doing is adding the halfsteps in logical stages 
-    //ex: base B♯4 to fixed C♯3
-    //stage1 calculating the octave half steps 
-      //12 half steps between any octave, only 1 octave in this example so it's 12 
-    //stage2 calculating the halfSteps added/subtracted by the accidentals
-      //since the fnOct is less than the bsOct than the ♯ accidental will shorten the distance from the base
-    //stage3 determine how to add/subtract the remaining halfsteps to get a total 
-    //so now all you need to do now is add the half steps from C♯4 to B♯4, as the half steps from C♯3 to C♯4 have already been calculated, and you'll get the total
   
   const scaleMaker = (note1) => {
     //returned scale will always be in the key of 'C'
@@ -73,7 +76,7 @@ const noteFrequency = ({baseNote={octave:'4',step:'A',alter:'0'},baseFrequency=4
   }
   
   const relativeHalfSteps = (note1,note2) => {
-    //used to determine the number of half steps from note1 to note2
+    //used to determine the number of half steps COUNTING UP from note1 to note2
     //only to be used on notes within an octave of each other
     //relativeHalfSteps functions calculates semitones before accidentals
     if(note1 === note2) return 0
