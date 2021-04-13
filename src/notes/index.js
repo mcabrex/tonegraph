@@ -13,6 +13,7 @@ const noteFrequency = ({baseNote={octave:'4',step:'A',alter:'0'},baseFrequency=4
   }
   
   const totalHalfSteps = (baseNoteObj,fixedNoteObj) => {
+    //idea 2 add total halfsteps for fixed and base then subtract?
     //what this function is doing is calculating the halfsteps in logical stages
     //stage1 calculates the octave half steps 
     //stage2 calculates the accidental half steps
@@ -46,6 +47,7 @@ const noteFrequency = ({baseNote={octave:'4',step:'A',alter:'0'},baseFrequency=4
     const relativeHalfStepTotal = countDirection ? relativeHalfSteps(fixedLetter,baseLetter) : relativeHalfSteps(baseLetter,fixedLetter) 
 
     //stage4
+    //if the fixed note is below the base note use negative numbers
     //it helps to think of this next part as a line scale with the basenote resting at the center of it
     //4 scenarios?
     //2 scenarios account for remainder half steps

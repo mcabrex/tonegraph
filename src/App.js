@@ -1,15 +1,25 @@
 import React, { Component } from 'react'
 import "./App.css"
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
 
 import Embed from 'flat-embed';
 import LineChart from './Chart' 
+
+// const App = () => {
+//     const [data, setData] = useState({users: [], isFetching: false});
+
+// }
 
 export default class App extends Component {
     constructor(props){
         super(props);
         this.state = {
+            title: '',
             measureListData: {},
-        }
+            data: null
+        };
+        this.embedRef = React.createRef();
     }
 
     componentDidMount() {
@@ -17,20 +27,19 @@ export default class App extends Component {
     }
 
     initiateEmbed = () => {
-        const container = document.getElementById('embed-container');
+        const container = this.embedRef.current
         const embed = new Embed(container, {
-            //5c5f1886ad3e0562986ddb1a
-            //5a400b3a414fed57e15c8222
-            score: '5c5f1886ad3e0562986ddb1a',
+            score: process.env.REACT_APP_SCORE_KEY,
             embedParams: {
-                appId: '59e7684b476cba39490801c2',
+                appId: process.env.REACT_APP_FLAT_KEY,
             }
         });
         
         embed.getJSON().then(data => {
             console.log('JSON data',data)
             const measureListData = data['score-partwise']['part'].map(part => part['measure'])     
-            this.setState({measureListData})
+            const title = data['score-partwise']['work']['work-title']     
+            this.setState({measureListData,title,data})
         }).catch(function (error) {
             console.error(error)
         });
@@ -39,8 +48,17 @@ export default class App extends Component {
     render() {
         return (
             <div className="App">
-                <LineChart measureListData={this.state.measureListData}/>
-                <div id="embed-container" />
+                {
+                    !this.state.data && <div>Loading Brutha</div>
+                }
+                {
+                    this.state.data && 
+                    <React.Fragment>
+                        <h1 className={'chart-title'}>{this.state.title}</h1>
+                        <LineChart measureListData={this.state.measureListData} data={this.state.data}/>
+                    </React.Fragment>
+                }
+                <div id="embed-container" ref={this.embedRef}/>
             </div>
         )
     }
