@@ -1,16 +1,26 @@
 const noteFrequency = ({baseNote={octave:'4',step:'A',alter:'0'},baseFrequency=440,fixedNote}) => {
-    //frequency formula is fn = f0 * (a)n
-    //n = number of half steps from baseNote to fixedNote
-    //0 is the frequency of the baseNote, this must be defined for this to work
-    //a = 12th root of 2
-    if(fixedNote['pitch'] === undefined) {
-      return 0
-    }
-    const halfStepDistance = totalHalfSteps(baseNote,fixedNote['pitch'])
-    const root = Math.pow(2,1/12)
-    const fixedNoteFrequency = baseFrequency * Math.pow(root,halfStepDistance)
-    return Number(fixedNoteFrequency.toFixed(2))
-  }
+  //baseNote rests at baseFrequency which is generally A4 = 440
+  //baseNote and fixedNote should be two pitch objects containin octave,step,alter
+  
+  //frequency formula is fn = f0 * (a)^n
+  //n = the number of half steps away from the fixed note you are. If you are at a higher note, n is positive. If you are on a lower note, n is negative.
+  //0 is the frequency of the baseNote, this must be defined for this to work
+  //a = 12th root of 2
+  const halfStepDistance = halfStepTotal(fixedNote) - halfStepTotal(baseNote)
+  const root = Math.pow(2,1/12)
+  const fixedNoteFrequency = baseFrequency * Math.pow(root,halfStepDistance)
+
+  return Number(fixedNoteFrequency.toFixed(2))
+}
+
+  
+const halfStepTotal = ({octave,step,alter=0}) => {
+  const keyScale = 'C#D#EF#G#A#B'
+  const octaveTotal = parseInt(octave)*12
+  const pitchTotal = keyScale.indexOf(step)
+  return octaveTotal+pitchTotal+parseInt(alter)
+}
+  
   
   const totalHalfSteps = (baseNoteObj,fixedNoteObj) => {
     //idea 2 add total halfsteps for fixed and base then subtract?

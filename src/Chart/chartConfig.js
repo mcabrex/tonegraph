@@ -1,30 +1,43 @@
-const chartConfig = (datasets) => {
-    console.log('config data',datasets)
+const chartConfig = (dataArr) => {
+    console.log('config data',dataArr)
+
     return {
-        maintainAspectRatio: false,
-        responsive: true,
         type: 'line',
         data: {
-            datasets
+            labels: dataArr[0].map(obj => obj.x),
+            datasets: [{
+                label:'pitch',
+                data: dataArr[0].map(obj => obj.y),
+                fill: false,
+                stepped: 'middle',
+                borderColor: '#489AEC',
+            }],
+            steppedLine: 'middle',
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,     
-            legend: {
-                display: false
-            },          
+            maintainAspectRatio: false,  
+            elements: {
+                point: {
+                    pointStyle: 'line'
+                },
+            },
             scales: {
-                xAxes: [{
-                    distribution: 'linear',
+                x: {
                     type: 'time',
                     time: {
-                        unit: 'millisecond',
-                        displayFormats: {
-                            'millisecond': 'SSS' 
-                        }
+                        unit: 'millisecond'
                     },
-                }],
-            },
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        callback: function(value, index, values) {
+                            console.log('value',value)
+                            return value.slice(8,11);
+                        }
+                    }
+    
+                  },
+            }    
         },
     };
 }
