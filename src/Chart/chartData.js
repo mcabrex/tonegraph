@@ -1,4 +1,6 @@
 import {noteFrequency} from "../notes"
+import 'chartjs-adapter-luxon';
+import { Duration } from "luxon";
 
 export const noteInterpolater = ({measureList,qpm}) => {
     //here we define a note object
@@ -28,21 +30,30 @@ export const noteInterpolater = ({measureList,qpm}) => {
 
 export const dataSetGenerator = (noteDataList) => {
     const data = []
-
-    let time = 0
+    let time = Duration.fromObject({})
     noteDataList.forEach((noteObj,ind,list)=>{
         const {qpm,divisions,duration,pitch,voice} = noteObj
         const qps = qpm / 60
         const quarterNoteValInSecs = 1/qps
-        const noteLength = (quarterNoteValInSecs/divisions) * duration
-
-        console.log('divisions',noteLength)
+        const noteLength = (quarterNoteValInSecs/divisions) * duration 
         const frequency = noteFrequency({fixedNote:pitch})
+        if(ind === 0){
+            //initializing time 
+            data.push({
+                x:+time.as('seconds').toFixed(2),
+                y:frequency
+            })
+        }
+        
+        time = time.plus(Duration.fromObject({
+            seconds: noteLength
+        }))
+
         data.push({
-            x:time,
+            x:+time.as('seconds').toFixed(2),
             y:frequency
         })
-        time+=noteLength
+        
     })
 
     return data

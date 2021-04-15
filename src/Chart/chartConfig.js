@@ -1,15 +1,22 @@
+import { DateTime,Duration } from "luxon";
+
+
 const chartConfig = (dataArr) => {
     console.log('config data',dataArr)
 
     return {
         type: 'line',
         data: {
-            labels: dataArr[0].map(obj => obj.x),
             datasets: [{
                 label:'pitch',
-                data: dataArr[0].map(obj => obj.y),
+                data: dataArr[0].map(obj => {
+                   return {
+                    x: obj.x,
+                    y: obj.y
+                   }
+                }),
                 fill: false,
-                stepped: 'middle',
+                stepped: 'after',
                 borderColor: '#489AEC',
             }],
             steppedLine: 'middle',
@@ -25,18 +32,21 @@ const chartConfig = (dataArr) => {
             scales: {
                 x: {
                     type: 'time',
-                    time: {
-                        unit: 'millisecond'
-                    },
                     ticks: {
                         // Include a dollar sign in the ticks
                         callback: function(value, index, values) {
-                            console.log('value',value)
-                            return value.slice(8,11);
+                            return +Duration.fromISOTime(value).as('seconds')
                         }
+                    },
+                    grid: {
+                        display: false
+                    },
+                },
+                y: {
+                    grid: {
+                        display: false
                     }
-    
-                  },
+                }
             }    
         },
     };

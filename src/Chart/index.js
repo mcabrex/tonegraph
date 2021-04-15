@@ -17,7 +17,6 @@ export default class LineChart extends Component {
     }
 
     componentDidMount(){
-        // console.log('props',this.props.data)
         const measureListData = this.props.data['score-partwise']['part'].map(part => part['measure'])     
         console.log('measureListData',measureListData)
         const noteDataLists = measureListData.map((measureList,ind,partsArr) => {
@@ -25,21 +24,16 @@ export default class LineChart extends Component {
             return noteInterpolater({measureList,qpm})
         })
 
-        console.table('noteDataLists',noteDataLists)
         const datasets = noteDataLists.map((noteList,ind) => {
                 return dataSetGenerator(noteList,ind)
         })
         
-        console.log('datasets',datasets)
         //used to scale the scrollable width
         const dataWidths = datasets[0].length
-        console.log('width',dataWidths)
         
-        // if(this.state.chartWidth === 0){
-            this.setState({
-                chartWidth: dataWidths
-            })
-        // }
+        this.setState({
+            chartWidth: dataWidths
+        })
 
         const chartRef = this.chartRef.current.getContext('2d')
         new Chart(chartRef, chartConfig(datasets));
