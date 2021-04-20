@@ -26,21 +26,26 @@ const chartConfig = (dataArr) => {
             maintainAspectRatio: false,  
             elements: {
                 point: {
-                    pointStyle: 'line'
+                    radius: 0,
+                    pointHitRadius: 2
                 },
             },
             scales: {
                 x: {
                     type: 'time',
-                    ticks: {
-                        // Include a dollar sign in the ticks
-                        callback: function(value, index, values) {
-                            return +Duration.fromISOTime(value).as('seconds')
-                        }
+                    time: {
+                        unit: 'second'
                     },
                     grid: {
                         display: false
                     },
+                    ticks: {
+                        callback: function(value,index,values){
+                            return +Duration.fromISOTime(value.slice(0,8)).as('seconds') % 43200;
+                            //chartjs by default gives time values as ISOTime with an AM/PM at the end
+                            //Duration defaults at 12:00 (43200 hours)
+                        },
+                    }
                 },
                 y: {
                     grid: {

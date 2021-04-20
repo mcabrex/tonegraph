@@ -30,7 +30,9 @@ export const noteInterpolater = ({measureList,qpm}) => {
 
 export const dataSetGenerator = (noteDataList) => {
     const data = []
-    let time = Duration.fromObject({})
+    let time = Duration.fromObject({
+        seconds: 0
+    })
     noteDataList.forEach((noteObj,ind,list)=>{
         const {qpm,divisions,duration,pitch,voice} = noteObj
         const qps = qpm / 60
@@ -40,17 +42,17 @@ export const dataSetGenerator = (noteDataList) => {
         if(ind === 0){
             //initializing time 
             data.push({
-                x:+time.as('seconds').toFixed(2),
+                x:time.toISOTime(),
                 y:frequency
             })
         }
         
         time = time.plus(Duration.fromObject({
-            seconds: noteLength
+            seconds: noteLength.toFixed(2)
         }))
 
         data.push({
-            x:+time.as('seconds').toFixed(2),
+            x:time.toISOTime(),
             y:frequency
         })
         

@@ -18,7 +18,7 @@ export default class LineChart extends Component {
 
     componentDidMount(){
         const measureListData = this.props.data['score-partwise']['part'].map(part => part['measure'])     
-        console.log('measureListData',measureListData)
+
         const noteDataLists = measureListData.map((measureList,ind,partsArr) => {
             const qpm = partsArr[0][0]['sound'][1]['$tempo']
             return noteInterpolater({measureList,qpm})
@@ -49,7 +49,6 @@ export default class LineChart extends Component {
                     width: chartWidth ? `${chartWidth * 12.5}px` : '300px',
                     height: '500px'
                 }}>
-                {/* <div className="chart-inner-wrapper"> */}
                     <canvas id="myChart" width="0" ref={this.chartRef}></canvas>
                 </div>
             </div>
