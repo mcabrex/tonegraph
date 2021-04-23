@@ -8,7 +8,7 @@ const chartConfig = (dataArr) => {
         type: 'line',
         data: {
             datasets: [{
-                label:'pitch',
+                label:'Pitch',
                 data: dataArr[0].map(obj => {
                    return {
                     x: obj.x,
@@ -30,6 +30,27 @@ const chartConfig = (dataArr) => {
                     pointHitRadius: 2
                 },
             },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(context){
+                            console.log('context',context)
+                            // return context[0].parsed.x
+                        },
+                        label: function(context) {
+                            var label = context.dataset.label || '';
+    
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y + 'Hz';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },    
             scales: {
                 x: {
                     type: 'time',
@@ -40,6 +61,7 @@ const chartConfig = (dataArr) => {
                         display: false
                     },
                     ticks: {
+                        stepSize: 10,
                         callback: function(value,index,values){
                             return +Duration.fromISOTime(value.slice(0,8)).as('seconds') % 43200;
                             //chartjs by default gives time values as ISOTime with an AM/PM at the end
