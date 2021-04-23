@@ -5,7 +5,7 @@ import 'chartjs-adapter-luxon';
 import Loader from "react-loader-spinner";
 
 import {noteInterpolater,dataSetGenerator} from "./chartData"
-import chartConfig from './chartConfig'
+import config from './config'
 
 export default class LineChart extends Component {
     constructor(props){
@@ -36,7 +36,7 @@ export default class LineChart extends Component {
         })
 
         const chartRef = this.chartRef.current.getContext('2d')
-        new Chart(chartRef, chartConfig(datasets));
+        new Chart(chartRef, config(datasets));
     }
     
     render() {
