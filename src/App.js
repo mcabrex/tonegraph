@@ -2,21 +2,15 @@ import React, { Component } from 'react'
 import "./App.css"
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-
 import Embed from 'flat-embed';
 import LineChart from './Chart' 
-
-// const App = () => {
-//     const [data, setData] = useState({users: [], isFetching: false});
-
-// }
 
 export default class App extends Component {
     constructor(props){
         super(props);
         this.state = {
             title: '',
-            measureListData: {},
+            partData: [],
             data: null
         };
         this.embedRef = React.createRef();
@@ -36,10 +30,10 @@ export default class App extends Component {
         });
         
         embed.getJSON().then(data => {
-            console.log('JSON data',data)
-            const measureListData = data['score-partwise']['part'].map(part => part['measure'])     
-            const title = data['score-partwise']['work']['work-title']     
-            this.setState({measureListData,title,data})
+            const partData = data['score-partwise']['part']     
+            console.log('JSON data',partData)
+            const title = data['score-partwise']['work']['work-title']    
+            this.setState({partData,title,data})
         }).catch(function (error) {
             console.error(error)
         });
@@ -55,7 +49,7 @@ export default class App extends Component {
                     this.state.data && 
                     <React.Fragment>
                         <h1 className={'chart-title'}>{this.state.title}</h1>
-                        <LineChart measureListData={this.state.measureListData} data={this.state.data}/>
+                        <LineChart partData={this.state.partData} data={this.state.data}/>
                     </React.Fragment>
                 }
                 <div id="embed-container" ref={this.embedRef}/>

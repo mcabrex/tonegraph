@@ -1,4 +1,5 @@
-const noteFrequency = ({baseNote={octave:'4',step:'A',alter:'0'},baseFrequency=440,fixedNote}) => {
+const noteFrequency = ({baseNote={octave:'4',step:'A',alter:'0'},baseFrequency=440,fixedNote,rest}) => {
+  if(rest !== undefined) return 0
   //baseNote rests at baseFrequency which is generally A4 = 440
   //baseNote and fixedNote should be two pitch objects containin octave,step,alter
   

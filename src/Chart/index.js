@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-luxon';
 
-import Loader from "react-loader-spinner";
-
-import {noteInterpolater,dataSetGenerator} from "./chartData"
 import config from './config'
 
 export default class LineChart extends Component {
@@ -17,31 +14,18 @@ export default class LineChart extends Component {
     }
 
     componentDidMount(){
-        const measureListData = this.props.data['score-partwise']['part'].map(part => part['measure'])     
+        const {partData,data} = this.props     
 
-        const noteDataLists = measureListData.map((measureList,ind,partsArr) => {
-            const qpm = partsArr[0][0]['sound'][1]['$tempo']
-            return noteInterpolater({measureList,qpm})
-        })
-
-        const datasets = noteDataLists.map((noteList,ind) => {
-                return dataSetGenerator(noteList,ind)
-        })
-        
-        //used to scale the scrollable width
-        const dataWidths = datasets[0].length
-        
         this.setState({
-            chartWidth: dataWidths
+            chartWidth: data["score-partwise"]["measure-list"]["score-measure"].length*16,
         })
 
         const chartRef = this.chartRef.current.getContext('2d')
-        new Chart(chartRef, config(datasets));
+        new Chart(chartRef, config(partData));
     }
     
     render() {
         const {chartWidth} = this.state
-        console.log('state',this.state)
 
         return (
             <div className="chart-outer-wrapper">

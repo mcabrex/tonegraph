@@ -2,10 +2,10 @@ import data from "./data"
 import plugins from "./plugins"
 import scales from "./scales"
 
-const chartConfig = (dataArr) => {
+const chartConfig = (partsList) => {
     return {
         type: 'line',
-        data: data(dataArr),
+        data: data(partsList),
         options: {
             responsive: true,
             maintainAspectRatio: false,  
