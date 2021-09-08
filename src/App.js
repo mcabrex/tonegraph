@@ -30,8 +30,8 @@ export default class App extends Component {
         });
         
         embed.getJSON().then(data => {
-            const partData = data['score-partwise']['part']     
-            console.log('JSON data',partData)
+            const partData = data['score-partwise']['part']
+            console.log('data',data)
             const title = data['score-partwise']['work']['work-title']    
             this.setState({partData,title,data})
         }).catch(function (error) {

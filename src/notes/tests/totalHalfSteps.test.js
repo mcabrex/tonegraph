@@ -30,7 +30,6 @@ test('returned octave total is 12 - ascending', () => {
         const testObjects = testObjMaker(testArguments)
         const testBaseObj = testObjects[0]
         const testFixedObj = testObjects[1]
-        console.log(testObjects)
         expect(totalHalfSteps(testBaseObj,testFixedObj)).toBe(12)
     });
 })

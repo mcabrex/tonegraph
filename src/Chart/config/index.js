@@ -1,11 +1,11 @@
 import data from "./data"
-import plugins from "./plugins"
 import scales from "./scales"
+import plugins from './plugins'
 
-const chartConfig = (partsList) => {
+const chartConfig = ({partData,partNames}) => {
     return {
         type: 'line',
-        data: data(partsList),
+        data: data(partData,partNames),
         options: {
             responsive: true,
             maintainAspectRatio: false,  
@@ -15,8 +15,8 @@ const chartConfig = (partsList) => {
                     pointHitRadius: 2
                 },
             },
-            plugins,    
-            scales
+            scales,
+            plugins
         },
     };
 }

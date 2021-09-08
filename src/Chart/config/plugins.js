@@ -1,9 +1,10 @@
 const plugins = {
+    legend: {
+        align: 'start',
+        position: 'bottom'
+    },
     tooltip: {
         callbacks: {
-            title: function(context){
-                console.log('context',context)
-            },
             label: function(context) {
                 var label = context.dataset.label || '';
 

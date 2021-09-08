@@ -1,20 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
-
-.chart-outer-wrapper {
-  width: 100%;
+.App {
   overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.chart-title {
-  text-align: center;
-  font-family: 'Raleway', sans-serif;
-  margin: 0;
-  color: rgb(39, 39, 39);
-}
-
-#myChart {
-  height: 70vh;
 }
 
 #embed-container {

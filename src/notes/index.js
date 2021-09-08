@@ -22,90 +22,89 @@ const halfStepTotal = ({octave,step,alter=0}) => {
   return octaveTotal+pitchTotal+parseInt(alter)
 }
   
-  
-  const totalHalfSteps = (baseNoteObj,fixedNoteObj) => {
-    //idea 2 add total halfsteps for fixed and base then subtract?
-    //what this function is doing is calculating the halfsteps in logical stages
-    //stage1 calculates the octave half steps 
-    //stage2 calculates the accidental half steps
-    //stage3 calculates the note half steps
-    //stage4 accounts for the octave differential, more on that below
+const totalHalfSteps = (baseNoteObj,fixedNoteObj) => {
+  //idea 2 add total halfsteps for fixed and base then subtract?
+  //what this function is doing is calculating the halfsteps in logical stages
+  //stage1 calculates the octave half steps 
+  //stage2 calculates the accidental half steps
+  //stage3 calculates the note half steps
+  //stage4 accounts for the octave differential, more on that below
 
-    const baseScale = ['C','D','E','F','G','A','B']
-    //the octave number should be the last position on the note string
+  const baseScale = ['C','D','E','F','G','A','B']
+  //the octave number should be the last position on the note string
 
-    const baseOct = Number(baseNoteObj['octave'])
-    const baseLetter = baseNoteObj['step']
-    const baseAccidentals = baseNoteObj['alter'] !== undefined ? Number(baseNoteObj['alter']) : 0
+  const baseOct = Number(baseNoteObj['octave'])
+  const baseLetter = baseNoteObj['step']
+  const baseAccidentals = baseNoteObj['alter'] !== undefined ? Number(baseNoteObj['alter']) : 0
 
-    const fixedOct = Number(fixedNoteObj['octave'])
-    const fixedLetter = fixedNoteObj['step']
-    const fixedAccidentals = fixedNoteObj['alter'] !== undefined ? Number(fixedNoteObj['alter']) : 0
-    //The alter element represents chromatic alteration in number of semitones (e.g., -1 for flat, 1 for sharp). 
+  const fixedOct = Number(fixedNoteObj['octave'])
+  const fixedLetter = fixedNoteObj['step']
+  const fixedAccidentals = fixedNoteObj['alter'] !== undefined ? Number(fixedNoteObj['alter']) : 0
+  //The alter element represents chromatic alteration in number of semitones (e.g., -1 for flat, 1 for sharp). 
 
-    //stage1
-    const octaveDiff = Math.abs(Number(fixedOct) - Number(baseOct))
-    let octaveHalfSteps = octaveDiff*12
-  
-    //stage2
-    //here we use zero as a fixed point to anchor the 'position' of the fixedNote relative to the BasedNote 
-    let accidentalHalfSteps = baseOct > fixedOct ? 0+baseAccidentals-fixedAccidentals : 0-baseAccidentals+fixedAccidentals
-    let halfStepTotal = octaveHalfSteps + accidentalHalfSteps
-  
-    //stage3
-    //B > C
-    const countDirection = baseScale.indexOf(baseLetter) > baseScale.indexOf(fixedLetter) ? true : false
-    const relativeHalfStepTotal = countDirection ? relativeHalfSteps(fixedLetter,baseLetter) : relativeHalfSteps(baseLetter,fixedLetter) 
+  //stage1
+  const octaveDiff = Math.abs(Number(fixedOct) - Number(baseOct))
+  let octaveHalfSteps = octaveDiff*12
 
-    //stage4
-    //if the fixed note is below the base note use negative numbers
-    //it helps to think of this next part as a line scale with the basenote resting at the center of it
-    //4 scenarios?
-    //2 scenarios account for remainder half steps
-        //octaves start at C and end on B but the base note does not necessarily have to follow that so you'll have to account for that octave differential
-    //2 scenarios account for the octave being above or below
-    if(countDirection){
-      return fixedOct < baseOct ? (halfStepTotal+relativeHalfStepTotal)*-1 : halfStepTotal-relativeHalfStepTotal
-    }
-    else {
-      return fixedOct < baseOct ? (halfStepTotal-relativeHalfStepTotal)*-1 : halfStepTotal+relativeHalfStepTotal
-    }
+  //stage2
+  //here we use zero as a fixed point to anchor the 'position' of the fixedNote relative to the BasedNote 
+  let accidentalHalfSteps = baseOct > fixedOct ? 0+baseAccidentals-fixedAccidentals : 0-baseAccidentals+fixedAccidentals
+  let halfStepTotal = octaveHalfSteps + accidentalHalfSteps
+
+  //stage3
+  //B > C
+  const countDirection = baseScale.indexOf(baseLetter) > baseScale.indexOf(fixedLetter) ? true : false
+  const relativeHalfStepTotal = countDirection ? relativeHalfSteps(fixedLetter,baseLetter) : relativeHalfSteps(baseLetter,fixedLetter) 
+
+  //stage4
+  //if the fixed note is below the base note use negative numbers
+  //it helps to think of this next part as a line scale with the basenote resting at the center of it
+  //4 scenarios?
+  //2 scenarios account for remainder half steps
+      //octaves start at C and end on B but the base note does not necessarily have to follow that so you'll have to account for that octave differential
+  //2 scenarios account for the octave being above or below
+  if(countDirection){
+    return fixedOct < baseOct ? (halfStepTotal+relativeHalfStepTotal)*-1 : halfStepTotal-relativeHalfStepTotal
   }
-  
-  const scaleMaker = (note1) => {
-    //returned scale will always be in the key of 'C'
-    //this particular scaleMaker is essentially used to assist the relativeHalfSteps function
-    const baseScale = ['C','D','E','F','G','A','B']
-    if(baseScale.indexOf(note1) === -1) throw new Error('Invalid Argument');
-    if(note1 === 'C') return baseScale
-    const baseLength = baseScale.length
-    const newScale = []
-    const ind = baseScale.findIndex(note => note === note1)
-    for(let i = 0; i < baseLength; i++){
-      let curr = ind+i > baseLength-1 ? ((ind+i) % baseLength) : ind + i
-      newScale.push(baseScale[curr])
-    }
-    return newScale
+  else {
+    return fixedOct < baseOct ? (halfStepTotal-relativeHalfStepTotal)*-1 : halfStepTotal+relativeHalfStepTotal
   }
-  
-  const relativeHalfSteps = (note1,note2) => {
-    //used to determine the number of half steps COUNTING UP from note1 to note2
-    //only to be used on notes within an octave of each other
-    //relativeHalfSteps functions calculates semitones before accidentals
-    if(note1 === note2) return 0
-    const scale = scaleMaker(note1)
-    let minimumSteps = 0
-    for(let i = 1; i < scale.length; i++){
-      let curr = scale[i]
-      let halfSteps = curr === 'C' || curr === 'F' ? 1 : 2
-      //calculating the halfSteps between notes going up the scale
-      //only one semitone between B -> C and E -> F
-      //every other step has 2 semitones between them
-      minimumSteps+=halfSteps
-      if(curr === note2) break;
-    }
-    return minimumSteps
+}
+
+const scaleMaker = (note1) => {
+  //returned scale will always be in the key of 'C'
+  //this particular scaleMaker is essentially used to assist the relativeHalfSteps function
+  const baseScale = ['C','D','E','F','G','A','B']
+  if(baseScale.indexOf(note1) === -1) throw new Error('Invalid Argument');
+  if(note1 === 'C') return baseScale
+  const baseLength = baseScale.length
+  const newScale = []
+  const ind = baseScale.findIndex(note => note === note1)
+  for(let i = 0; i < baseLength; i++){
+    let curr = ind+i > baseLength-1 ? ((ind+i) % baseLength) : ind + i
+    newScale.push(baseScale[curr])
   }
+  return newScale
+}
+
+const relativeHalfSteps = (note1,note2) => {
+  //used to determine the number of half steps COUNTING UP from note1 to note2
+  //only to be used on notes within an octave of each other
+  //relativeHalfSteps functions calculates semitones before accidentals
+  if(note1 === note2) return 0
+  const scale = scaleMaker(note1)
+  let minimumSteps = 0
+  for(let i = 1; i < scale.length; i++){
+    let curr = scale[i]
+    let halfSteps = curr === 'C' || curr === 'F' ? 1 : 2
+    //calculating the halfSteps between notes going up the scale
+    //only one semitone between B -> C and E -> F
+    //every other step has 2 semitones between them
+    minimumSteps+=halfSteps
+    if(curr === note2) break;
+  }
+  return minimumSteps
+}
   
   export {
     relativeHalfSteps,
