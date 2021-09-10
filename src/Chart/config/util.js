@@ -1,9 +1,8 @@
 import {noteFrequency} from "../../notes"
-import 'chartjs-adapter-luxon';
-import { Duration } from "luxon";
 
 export const noteInterpolater = (measureList) => {
-    //create a list of noteObjects in order
+    //recieves a list of measures
+    //creates a list of noteObjects in order
     const noteDataList = []
     let lastDivisions = ''
     let qpm = 0
@@ -34,25 +33,38 @@ export const noteInterpolater = (measureList) => {
 
 
 export const dataSetGenerator = (noteDataList) => {
-    const data = [{
-        'time':0,
-        'frequency':0
-    }]
-    let time = 0
+    let times = {}
+    const dataSets = {}
+    let voiceNum = 0
+    let data = []
 
     noteDataList.forEach((noteObj,ind,list)=>{
-        const {divisions,duration,pitch,rest} = noteObj
+        const {divisions,duration,pitch,rest,voice} = noteObj
         const frequency = noteFrequency({
             fixedNote:pitch,
             rest
         })
-        
-        time+=(4/divisions*duration)
-        data.push({
-            'time':time,
+
+        if(!times[+voice]){
+            times[+voice] = 0
+            dataSets[+voice] = [{
+                'time':0,
+                'frequency':0
+            }]
+            //initialize data points at 0 and set the steppedLine point to 'after' to simulate the passage of time
+            voiceNum++
+        }
+        console.log(times)
+
+        times[+voice]+=(4/divisions*duration)
+        dataSets[+voice].push({
+            'time':times[+voice],
             'frequency':frequency
         })
     })
 
-    return data
+    for(let i = 1; i < voiceNum+1;i++){
+        data.push(dataSets[i])
+    }
+    return data.flat()
 }

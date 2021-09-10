@@ -2,9 +2,6 @@ const scales = {
     x: {
         type: 'linear',
         beginAtZero: true,
-        grid: {
-            display: false
-        },
         ticks: {
             min: -1,
             max: 8,
@@ -14,9 +11,7 @@ const scales = {
         display: false
     },
     y: {
-        grid: {
-            display: false
-        }
+
     }
 } 
 

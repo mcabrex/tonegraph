@@ -14,11 +14,13 @@ const COLORS = [
 
 const data = (partData,partNames) => {
     //interpolate data here
+    console.log('partData',partData)
     const datasets = {
         datasets: partData.map((partObj,ind) => {
             //take the measure array (part['measure]) and turn it into a sequence of note objects in order
             const noteObjects = noteInterpolater(partObj['measure'])
-            const noteArr =  dataSetGenerator(noteObjects)
+            console.log('noteObjs',noteObjects)
+            const noteArr = dataSetGenerator(noteObjects)
 
             return {
                 label:`${partNames[ind]}`,
@@ -34,7 +36,7 @@ const data = (partData,partNames) => {
             }
         }),
     }
-    console.log('datasets',datasets) 
+    console.log('datases',datasets) 
     return datasets
 }
 
