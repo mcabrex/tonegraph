@@ -2,8 +2,11 @@
 
 .chart-outer-wrapper {
     overflow-x: auto;
-    overflow-y: hidden;
-  }
+}
+
+.chart-inner-wrapper {
+  height: 100%;
+}
 
 .chart-title {
   text-align: center;
@@ -12,6 +15,6 @@
   color: rgb(39, 39, 39);
 }
 
-#myChart {
-  height: 55vh;
-}
+/* #myChart {
+  height: 100%;
+} */

@@ -1,0 +1,22 @@
+.scores {
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+.scores h2 {
+    margin: 0;
+}
+
+.scores button {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(194, 194, 194);
+    margin: 10px 0;
+}
+
+.scores button:hover {
+    background-color: rgba(0, 0, 0, 0.233);
+    color: white;
+}

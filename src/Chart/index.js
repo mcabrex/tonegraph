@@ -10,6 +10,7 @@ export default class LineChart extends Component {
         super(props);
         this.state = {
             chartWidth: 0,
+            chart: {}
         };
         this.chartRef = React.createRef();
     }
@@ -21,7 +22,14 @@ export default class LineChart extends Component {
             chartWidth: data["score-partwise"]["measure-list"]["score-measure"].length*32*5,
         })
         const chartRef = this.chartRef.current.getContext('2d')
-        new Chart(chartRef, config({partData,partNames}));
+        const myChart = new Chart(chartRef, config({partData,partNames}));
+        this.setState({
+            chart: myChart
+        })
+    }
+
+    updateData = (chart) => {
+
     }
     
     render() {

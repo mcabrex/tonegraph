@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import "./App.css"
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-
 import Embed from 'flat-embed';
 import LineChart from './Chart' 
+import ScoreList from './ScoreList'
+
+import "./App.css"
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 export default class App extends Component {
     constructor(props){
@@ -11,37 +12,46 @@ export default class App extends Component {
         this.state = {
             title: '',
             partData: [],
-            data: null
+            data: null,
+            scoreId: 0
         };
         this.embedRef = React.createRef();
     }
 
     componentDidMount() {
-        this.initiateEmbed()
+        this.initiateEmbed(process.env.REACT_APP_SCORE_KEY_1)
     }
 
-    initiateEmbed = () => {
+    initiateEmbed = (scoreId) => {
+        console.log('scoreId',scoreId,this.state)
         const container = this.embedRef.current
         const embed = new Embed(container, {
-            score: process.env.REACT_APP_SCORE_KEY,
+            score: scoreId,
             embedParams: {
                 appId: process.env.REACT_APP_FLAT_KEY,
             }
         });
-        
-        embed.getJSON().then(data => {
-            const partData = data['score-partwise']['part']
-            console.log('data',data)
-            const title = data['score-partwise']['work']['work-title']    
-            this.setState({partData,title,data})
+
+        embed.loadFlatScore(scoreId).then(e => {
+            embed.getJSON().then(data => {
+                const partData = data['score-partwise']['part']
+                console.log('data',data)
+                const title = data['score-partwise']['work']['work-title']    
+                this.setState({partData,title,data})
+            }).catch(function (error) {
+                console.error(error)
+            });
         }).catch(function (error) {
             console.error(error)
         });
+        
+
     }
 
     render() {
         return (
             <div className="App">
+                <ScoreList updateEmbed={this.initiateEmbed}/>
                 {
                     !this.state.data && <div>Loading Brutha</div>
                 }
