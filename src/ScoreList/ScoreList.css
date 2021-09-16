@@ -4,9 +4,11 @@
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis; 
+  background-color: rgb(17, 17, 17);
 }
 .scores h2 {
     margin: 0;
+    text-align: center;
 }
 
 .scores button {

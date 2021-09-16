@@ -15,7 +15,7 @@ const PieceList = (props) => {
         <ul className="scores">
             <h2>Titles</h2>
             {
-                basicTitles.map((title,ind) => <li><button onClick={(e) => props.updateEmbed(basicTitles[ind])}>{title}</button></li>)
+                basicTitles.map((title,ind) => <li key={title}><button onClick={(e) => props.updateEmbed(basicTitles[ind])}>{title}</button></li>)
             }
         </ul>
     )

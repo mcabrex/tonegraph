@@ -1,11 +1,11 @@
-import data from "./data"
 import scales from "./scales"
 import plugins from './plugins'
+import dataSets from './data'
 
-const chartConfig = ({partData,partNames}) => {
+const chartConfig = (data) => {
     return {
         type: 'line',
-        data: data(partData,partNames),
+        data: dataSets(data),
         options: {
             responsive: true,
             maintainAspectRatio: false,  

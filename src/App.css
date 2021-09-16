@@ -1,13 +1,13 @@
 .App {
   display: grid;
-  grid-template-columns: 20% 80%;
-  grid-template-rows: 7.5% 62.5% 30%;
+  grid-template-columns: 14.5% 85.5%;
+  grid-template-rows: 7.5% 52.5% 40%;
   grid-template-areas: 
   "names title"
   "names graph"
-  "flat flat";
+  "names flat";
   height: 100vh;
-  background-color: rgb(17, 17, 17);
+  background-color: rgb(31, 31, 31);
   color: white;
 }
 

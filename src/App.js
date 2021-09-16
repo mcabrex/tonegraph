@@ -11,9 +11,8 @@ export default class App extends Component {
         super(props);
         this.state = {
             title: '',
-            partData: [],
             data: null,
-            scoreId: 0
+            embed: {}
         };
         this.embedRef = React.createRef();
     }
@@ -23,7 +22,6 @@ export default class App extends Component {
     }
 
     initiateEmbed = (scoreId) => {
-        console.log('scoreId',scoreId,this.state)
         const container = this.embedRef.current
         const embed = new Embed(container, {
             score: scoreId,
@@ -31,21 +29,19 @@ export default class App extends Component {
                 appId: process.env.REACT_APP_FLAT_KEY,
             }
         });
+        this.loadEmbedScore(embed,scoreId)
+    }
 
+    loadEmbedScore = (embed,scoreId) => {
         embed.loadFlatScore(scoreId).then(e => {
             embed.getJSON().then(data => {
-                const partData = data['score-partwise']['part']
                 console.log('data',data)
                 const title = data['score-partwise']['work']['work-title']    
-                this.setState({partData,title,data})
-            }).catch(function (error) {
-                console.error(error)
-            });
+                this.setState({title,data})
+            })
         }).catch(function (error) {
             console.error(error)
         });
-        
-
     }
 
     render() {
@@ -59,7 +55,7 @@ export default class App extends Component {
                     this.state.data && 
                     <React.Fragment>
                         <h1 className={'chart-title'}>{this.state.title}</h1>
-                        <LineChart partData={this.state.partData} data={this.state.data}/>
+                        <LineChart data={this.state.data}/>
                     </React.Fragment>
                 }
                 <div id="embed-container" ref={this.embedRef}/>

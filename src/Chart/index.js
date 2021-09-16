@@ -1,48 +1,35 @@
-import React, { Component } from 'react'
+import React, {useRef,useEffect,useState} from 'react'
 import Chart from 'chart.js/auto';
-import 'chartjs-adapter-luxon';
+import config from './config'
+import dataSets from './config/data'
+
 import './Chart.css'
 
-import config from './config'
+const LineChart = (props) => {
+    const {data} = props
+    const chartContainer = useRef(null);
+    const [chartInstance, setChartInstance] = useState(null);
 
-export default class LineChart extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            chartWidth: 0,
-            chart: {}
-        };
-        this.chartRef = React.createRef();
-    }
+    useEffect(() => {
+        if (chartContainer && chartContainer.current && !chartInstance) {
+            //runs on instance start
+            const newChartInstance = new Chart(chartContainer.current, config(data));
+            setChartInstance(newChartInstance);
+        }
+        if(chartInstance && data){
+            //runs on props change (props.data)
+            chartInstance.data = dataSets(data);
+            chartInstance.update();
+        }
+    }, [chartContainer,props.data]);
 
-    componentDidMount(){
-        const {partData,data} = this.props  
-        const partNames = data["score-partwise"]["part-list"]["score-part"].map(part=>part['part-name'])
-        this.setState({
-            chartWidth: data["score-partwise"]["measure-list"]["score-measure"].length*32*5,
-        })
-        const chartRef = this.chartRef.current.getContext('2d')
-        const myChart = new Chart(chartRef, config({partData,partNames}));
-        this.setState({
-            chart: myChart
-        })
-    }
-
-    updateData = (chart) => {
-
-    }
-    
-    render() {
-        const {chartWidth} = this.state
-
-        return (
-            <div className="chart-outer-wrapper">
-                <div className="chart-inner-wrapper" style={{
-                    width: chartWidth ? `${chartWidth}px` : '300px',
-                }}>
-                    <canvas id="myChart" width="0" ref={this.chartRef}></canvas>
-                </div>
+    return (
+        <div className="chart-outer-wrapper">
+            <div className="chart-inner-wrapper">
+                <canvas id="myChart" width="0" ref={chartContainer}></canvas>
             </div>
-        )
-    }
+        </div>
+    )
 }
+
+export default LineChart
