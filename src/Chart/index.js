@@ -7,6 +7,7 @@ import './Chart.css'
 
 const LineChart = (props) => {
     const {data} = props
+    const setLengths = data["score-partwise"]["part"].map(part => +part['measure'].length)
     const chartContainer = useRef(null);
     const [chartInstance, setChartInstance] = useState(null);
 
@@ -16,17 +17,22 @@ const LineChart = (props) => {
             const newChartInstance = new Chart(chartContainer.current, config(data));
             setChartInstance(newChartInstance);
         }
+    }, [chartContainer]);
+
+    useEffect(() => {
+        //runs on props change (props.data)
         if(chartInstance && data){
-            //runs on props change (props.data)
             chartInstance.data = dataSets(data);
             chartInstance.update();
         }
-    }, [chartContainer,props.data]);
+    },[props.data])
 
     return (
         <div className="chart-outer-wrapper">
-            <div className="chart-inner-wrapper">
-                <canvas id="myChart" width="0" ref={chartContainer}></canvas>
+            <div className="chart-inner-wrapper" style={{
+                width: `${Math.max(...setLengths)*35*5}px`
+            }}>
+                <canvas id="myChart" ref={chartContainer}></canvas>
             </div>
         </div>
     )
