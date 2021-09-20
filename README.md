@@ -1,5 +1,15 @@
 # 🎵 Tonegraph 🎵
 
+## Table of Contents 
+- [Background](#background)
+- [Technology](#technology)
+- [How It Works](#how-it-works)
+  - [Deriving frequencies from Music Theory](#deriving-frequencies-from-music-theory)
+  - [Notation](#notation)
+    - [*MusicXML*](#musicxml)
+  - [Charting Data](#charting-data)
+  - [Time](#time)
+- [Future Goals and Current Constraints](#future-goals-and-current-constraints)
 # Background 
 Largely inspired by Rob Stenson's visualization of Vulfpeck's '*Bach Vision Test*', Tonegraph was built on the idea of visualizing JS Bach's counterpoint to add a further layer of complexity when appreciating his works. Eventually the projects goal will be to apply a method of visualizing the data of sheet music in general. 
 
@@ -9,8 +19,8 @@ Largely inspired by Rob Stenson's visualization of Vulfpeck's '*Bach Vision Test
 - **Flat Embed / REST API** - Flat's Embed allows the user to view and play the sheet music on the browser. It's API allows us to parse data from a MusicXML file.
 - **ChartJS** - No-fuss charting library run on HTML5 Canvas
 
-# ⚙️How It Works 
-## Deriving frequencies from Music Theory 🎼
+# How It Works 
+## Deriving frequencies from Music Theory 
 
 The first hurdle for this project was to find a way to derive frequencies from theory, there is after all no actual sound waves coming from just a simple sheet of music. Forunately the formula for the frequency of notes is already out there:
 
@@ -33,7 +43,7 @@ The biggest difficulty in this formula was the variable **n**, the number of hal
 
 Music notation and the staffs they're built upon are the foundations of modern Western Music Theory. Unfortunately these building blocks aren't exactly inherent to computers. It's a complicated topic and completely out of the scope of this project. Luckily there's already a group of very talented engineers working on a standardization for this problem, MusicXML.
 
-### *MusicXML* 💿
+### *MusicXML* 
 
 As described by the site:
 
@@ -41,7 +51,7 @@ As described by the site:
 
 Robust and reliable, MusicXML is the gold standard for music notation software. As an added bonus it got licensed under W3C back in version 3.1 and it's documentation in turn became fairly accessable on the web. In order to get this MusicXML data as something a little easier to use (JSON) we use **Flat's REST API**. 
 
-## Charting Data 💹
+## Charting Data 
 
 There were two stand out options for visualizing data for this project: **D3** and **ChartJS**.
 
@@ -57,7 +67,7 @@ There were two stand out options for visualizing data for this project: **D3** a
 
 Since the current scope of the project only really required a Stepped-Line graph I opted to use **ChartJS**. It's easy to use API allowed me to get off the ground running and it's use of the Canvas over SVG will speed up performance for the large volume of data that can come with music scores. In exchange for it's performance however the Canvas does have it's drawbacks. It's render size can **not** be expressed with relative values, but it's *display* size can. These sizes are independent from each other so the canvas render size does not adjust automatically based on the display size, making the rendering inaccurate. This can become very tricky to handle when you're dealing with a large volume of responsive data, but there are a few built-in options that might help you manage this.
 
-## Time ⏳
+## Time 
 
 Time doesn't exist in sheet music, so you're gonna need to work out your own way to collate data from MusicXML and turn it into something that can the illusion of time relative to the piece. There are a lot of factors that go into the length of a piece, including human input variation, so you can never really come up with a true time length for a piece but you can come pretty close to an approximate length. 
 
@@ -67,7 +77,7 @@ In it's place I opted for an incremental method where I assigned notes to values
 
 - *ie:* if a quarter-note had a value of 1 then a half-note would have a value of 2 and so on
 
-# Future Goals and Current Constraints 🥅
+# Future Goals and Current Constraints 
 
 Eventually there are some major improvements that I'd like to implement but they will be rather time consuming:
 
