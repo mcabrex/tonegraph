@@ -2,10 +2,9 @@
     list-style: none;
     padding: 5px;
     margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis; 
-  background-color: rgb(17, 17, 17);
+    background-color: rgb(17, 17, 17);
 }
+
 .scores h2 {
     margin: 0;
     text-align: center;
@@ -13,9 +12,15 @@
 
 .scores button {
     border: none;
+    width: 100%;
+    padding: 0;
     background-color: rgba(0, 0, 0, 0);
-    color: rgb(194, 194, 194);
+    color: rgb(148, 148, 148);
     margin: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    text-overflow: ellipsis;
 }
 
 .scores button:hover {

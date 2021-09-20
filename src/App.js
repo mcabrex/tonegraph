@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Embed from 'flat-embed';
 import LineChart from './Chart' 
 import ScoreList from './ScoreList'
+import Loader from './Loader'
 
 import "./App.css"
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
@@ -48,9 +49,7 @@ export default class App extends Component {
         return (
             <div className="App">
                 <ScoreList updateEmbed={this.initiateEmbed}/>
-                {
-                    !this.state.data && <div>Loading Brutha</div>
-                }
+                {!this.state.data && <Loader />}
                 {
                     this.state.data && 
                     <React.Fragment>

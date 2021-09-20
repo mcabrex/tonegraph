@@ -11,6 +11,10 @@
   color: white;
 }
 
+.lds-spinner {
+  grid-area: graph;
+}
+
 .App h1 {
   color: white;
 }
